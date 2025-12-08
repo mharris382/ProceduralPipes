@@ -1,0 +1,17 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "PCGPipes",
+	"Description": "PCG Pipe Spline Tool",
+	"Category": "PCG",
+	"CreatedBy": "Max Harris",
+	"CreatedByURL": "",
+	"DocsURL": "https://docs.google.com/document/d/1G2CPxulTsxWDFIMRHI0IuspqTQ1BRHoiUMN6pOmnjjc/edit?usp=sharing",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false
+}
