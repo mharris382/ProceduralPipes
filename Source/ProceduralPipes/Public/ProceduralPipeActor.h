@@ -7,14 +7,14 @@
 #include "PCGGraph.h"
 #include "ProceduralPipeActor.generated.h"
 
-
-#define OVERRIDE_PCG_GRAPH_PROPERTY(DisplayName, CategoryName, TooltipText) \
-UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CategoryName, meta = (InlineEditConditionToggle, DisplayName = DisplayName)) \
-bool bEnable##DisplayName = false; \
-\
-UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CategoryName, meta = (EditCondition = "DisableAllOverrideGraphs || bEnable" #DisplayName, Tooltip=TooltipText)) \
-TScriptInterface<UPCGGraphInterface> DisplayName;
-
+//#define OVERRIDE_PCG_GRAPH_PROPERTY(Name, CategoryName, TooltipText) \
+//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CategoryName, \
+//	meta = (InlineEditConditionToggle, Tooltip = TooltipText)) \
+//bool bEnable##Name = false; \
+//\
+//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CategoryName, \
+//	meta = (EditCondition = "bEnable" #Name, EditConditionHides, Tooltip = TooltipText)) \
+//TScriptInterface<UPCGGraphInterface> Name;
 //USTRUCT(BlueprintType)
 //struct PROCEDURALPIPES_API FPipePartConfig
 //{
@@ -85,37 +85,47 @@ public:
 
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Joints")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints")
 	bool SpawnJoints = true;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Joints", meta = (EditCondition = "SpawnJoints"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", meta = (EditCondition = "SpawnJoints"))
 	TSoftObjectPtr<UStaticMesh> JointMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Joints", meta = (EditCondition = "SpawnJoints"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", meta = (EditCondition = "SpawnJoints"))
 	TSoftObjectPtr<UMaterialInterface> JointOverrideMaterial;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Joints", meta = (EditCondition = "SpawnJoints"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", meta = (EditCondition = "SpawnJoints"))
 	bool SpawnMiddleJoints;
 
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ArrayMode")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|ArrayMode")
 	bool EnableArrayMode;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ArrayMode", meta=(EditCondition="EnableArrayMode"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|ArrayMode", meta=(EditCondition="EnableArrayMode"))
 	int Count = 1;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ArrayMode", meta=(EditCondition="EnableArrayMode"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|ArrayMode", meta=(EditCondition="EnableArrayMode"))
 	float Spacing = 18.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ArrayMode", meta=(EditCondition="EnableArrayMode"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|ArrayMode", meta=(EditCondition="EnableArrayMode"))
 	FVector OffsetDirection = FVector(0.0, 0.0, 1.0);
 
 
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OverrideGraphs", meta = (Tooltip="Use this to disable all override graphs for this asset.  Useful for debugging."))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|OverrideGraphs", meta = (Tooltip="Use this to disable all override graphs for this asset.  Useful for debugging."))
 	bool DisableAllOverrideGraphs;
 
-	OVERRIDE_PCG_GRAPH_PROPERTY(SpawnOverrideGraph, "OverrideGraphs", "Final Stage of processing which spawns Static Meshes.  Override this to process and/or change how the static meshes are spawned")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|OverrideGraphs", meta = (InlineEditConditionToggle, Tooltip = "Final stage of processing which spawns Static Meshes. Override this to customize mesh spawning."))
+	bool bEnableSpawnOverride;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|OverrideGraphs", meta = (EditCondition = "bEnableSpawnOverride", Tooltip = "Final stage of processing which spawns Static Meshes. Override this to customize mesh spawning."))
+	TScriptInterface<UPCGGraphInterface> SpawnOverride;
+
+	//OVERRIDE_PCG_GRAPH_PROPERTY(
+	//	SpawnOverride,
+	//	"Pipes|OverrideGraphs",
+	//	"Final stage of processing which spawns Static Meshes. Override this to customize mesh spawning."
+	//)
 };
