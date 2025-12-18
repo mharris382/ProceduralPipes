@@ -15,45 +15,76 @@
 //UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CategoryName, \
 //	meta = (EditCondition = "bEnable" #Name, EditConditionHides, Tooltip = TooltipText)) \
 //TScriptInterface<UPCGGraphInterface> Name;
+
+
+USTRUCT(BlueprintType)
+struct PROCEDURALPIPES_API FPipePartConfig
+{
+	GENERATED_BODY();
+
+	FPipePartConfig() = default;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart")
+	TSoftObjectPtr<UStaticMesh> Mesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart", meta = (AllowPreserveRatio, ClampMin = "0.01", Tooltip="This will be multiplied by the shared pipe scale"))
+	FVector RelativeScale = FVector(1.0,1.0,1.0);
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart", meta = (InlineEditConditionToggle))
+	bool bUsePartOverrideMaterial = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart", meta = (EditCondition = "bUsePartOverrideMaterial"))
+	TSoftObjectPtr<UMaterialInterface> PartOverrideMaterial;
+
+
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart")
+	//FRotator PartRotation;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart|OverrideGraphs", meta = (InlineEditConditionToggle,
+		Tooltip = "Final stage of processing which spawns Static Meshes. Override this to customize mesh spawning."))
+	bool bEnableSpawnOverride;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart|OverrideGraphs", meta = (EditCondition = "bEnableSpawnOverride",
+		Tooltip = "Final stage of processing which spawns Static Meshes. Override this to customize mesh spawning."))
+	TScriptInterface<UPCGGraphInterface> SpawnOverride;
+
+
+};
+
 //USTRUCT(BlueprintType)
-//struct PROCEDURALPIPES_API FPipePartConfig
+//struct PROCEDURAL_PIPES_API FPipePartGrammarModule
 //{
 //	GENERATED_BODY();
 //
-//	FPipePartConfig() = default;
+//	FPipePartGrammarModule() = default;
 //
-//	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart")
-//	//TSoftObjectPtr<UStaticMesh> Mesh;
-//
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart")
-//	TSoftObjectPtr<UMaterialInterface> PartOverrideMaterial;
-//
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart", meta = (ClampMin = "0.01"))
-//	float PartScale = 1.0;
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart", meta = (Tooltip = "Non used by default, useful for implementing pcg grammar overrides.  See PreSpawn override example"))
+//	FString PartSymbol;
 //
 //	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart")
-//	FRotator PartRotation;
-//
+//	bool Scalable = true;
 //
 //
 //};
 
 
-USTRUCT(BlueprintType)
-struct PROCEDURALPIPES_API FOverrideablePCGGraph
-{
-	GENERATED_BODY();
 
-	FOverrideablePCGGraph() = default;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Overrides")
-	bool EnableOverrideGraph;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Overrides", meta = (EditCondition = "EnableOverrideGraph"))
-	TScriptInterface<UPCGGraphInterface> OverrideGraph;
-};
+//USTRUCT(BlueprintType)
+//struct PROCEDURALPIPES_API FOverrideablePCGGraph
+//{
+//	GENERATED_BODY();
+//
+//	FOverrideablePCGGraph() = default;
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Overrides")
+//	bool EnableOverrideGraph;
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Overrides", meta = (EditCondition = "EnableOverrideGraph"))
+//	TScriptInterface<UPCGGraphInterface> OverrideGraph;
+//};
 
 
 UCLASS(Abstract, BlueprintType)
@@ -70,15 +101,29 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (ClampMin = "0.01"))
 	float PipeScale = 1.0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes")
-	TSoftObjectPtr<UMaterialInterface> OverrideMaterial;
+
+	
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes")
+	FPipePartConfig StraightPipe;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes")
+	FPipePartConfig CornerStraightPipe;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (Tooltip = "Default Override Material, applied to all parts which do not assign an override material"))
+	TSoftObjectPtr<UMaterialInterface> DefaultOverrideMaterial;
+
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", AdvancedDisplay)
 	TSoftObjectPtr<UStaticMesh> StraightMesh;
 
+	
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes")
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", AdvancedDisplay)
 	TSoftObjectPtr<UStaticMesh> CornerMesh;
 
 	
@@ -88,14 +133,40 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints")
 	bool SpawnJoints = true;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", meta = (EditCondition = "SpawnJoints"))
-	TSoftObjectPtr<UStaticMesh> JointMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", meta = (EditCondition = "SpawnJoints"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", meta = (EditCondition = "SpawnJoints", InlineEditConditionToggle, EditConditionHides))
+	bool SpawnCornerJoints = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", meta = (EditCondition = "SpawnCornerJoints"))
+	FPipePartConfig PipeJointCorner;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", meta = (EditCondition = "SpawnJoints", InlineEditConditionToggle, EditConditionHides))
+	bool SpawnMiddleJoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", meta = (EditCondition = "SpawnMiddleJoints"))
+	FPipePartConfig PipeJointMiddle;
+
+
+
+
+
+
+
+
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", AdvancedDisplay, meta = (EditCondition = "SpawnJoints"))
+	TSoftObjectPtr<UStaticMesh> JointPipeCorner;
+
+
+	
+
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", AdvancedDisplay, meta = (EditCondition = "SpawnJoints"))
 	TSoftObjectPtr<UMaterialInterface> JointOverrideMaterial;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", meta = (EditCondition = "SpawnJoints"))
-	bool SpawnMiddleJoints;
+
 
 
 
@@ -106,7 +177,7 @@ public:
 	int Count = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|ArrayMode", meta=(EditCondition="EnableArrayMode"))
-	float Spacing = 18.0f;
+	float Spacing = 110.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|ArrayMode", meta=(EditCondition="EnableArrayMode"))
 	FVector OffsetDirection = FVector(0.0, 0.0, 1.0);
