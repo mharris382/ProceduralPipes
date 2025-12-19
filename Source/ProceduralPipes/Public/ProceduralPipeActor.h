@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "PCGGraph.h"
+#include "Components/BoxComponent.h"
 #include "ProceduralPipeActor.generated.h"
 
 //#define OVERRIDE_PCG_GRAPH_PROPERTY(Name, CategoryName, TooltipText) \
@@ -36,7 +37,7 @@ struct PROCEDURALPIPES_API FPipePartConfig
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart", meta = (EditCondition = "bUsePartOverrideMaterial"))
 	TSoftObjectPtr<UMaterialInterface> PartOverrideMaterial;
-
+	
 
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart")
@@ -96,6 +97,7 @@ public:
 	// Sets default values for this actor's properties
 	AProceduralPipeActor();
 
+	
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (ClampMin = "0.01"))
@@ -219,6 +221,29 @@ public:
 		Tooltip = "Graph executed after all spawning is complete. Receives spawned meshes as input and may spawn additional effects, decorations, or data. This graph cannot alter the original spawn results."))
 	TScriptInterface<UPCGGraphInterface> PostSpawnOverride;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", AdvancedDisplay, meta = (Tooltip = "If enabled, pipe spline will not spawn it's own points.   Instead the points will be output with the assumption that another pcg world actor will spawn them instead using SpawnPipes.  NOTE: if no actor exists, the pipe won't be spawned"))
+	bool IsBatched;
+
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Core", meta = (Tooltip = "Shared Actor Seed for convienence to be used in PCG Graphs with randomness.  This is only applicable with override graphs, the default behavior is not random", EditCondition = "!DisableAllOverrideGraphs"))
+	int Seed = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Core", meta = (Tooltip = "Padding to be added to the computed bounding box of the pipe actor"))
+	FVector BoundsPadding = FVector(0.0f, 0.0f, 0.0f);
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UBoxComponent* BoundingBox;
+
+	protected:
+		virtual void ComputeBoundingBox_Implementation(FVector& BoundsMin, FVector& BoundsMax);
+
+	public:
+		
+		UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Core")
+		void ComputeBoundingBox(FVector& BoundsMin, FVector& BoundsMax);
+		
 	//OVERRIDE_PCG_GRAPH_PROPERTY(
 	//	SpawnOverride,
 	//	"Pipes|OverrideGraphs",
