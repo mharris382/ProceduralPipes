@@ -28,11 +28,7 @@ AProceduralPipeActor::AProceduralPipeActor()
 	{
 		Tags.AddUnique(FName("Batched"));
 	}
-	else
-	{
-		Tags.RemoveAll(FName("Batched"));
-	}
-
+	
 }
 
 void AProceduralPipeActor::ComputeBoundingBox_Implementation(FVector& BoundsMin, FVector& BoundsMax)
