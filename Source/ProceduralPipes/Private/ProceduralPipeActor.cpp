@@ -15,13 +15,7 @@ AProceduralPipeActor::AProceduralPipeActor()
 	BoundingBox->SetupAttachment(RootComponent);
 	BoundingBox->SetCollisionProfileName(TEXT("NoCollision"));
 
-	FVector Min; 
-	FVector Max;
-	ComputeBoundingBox(Min, Max);
-	FVector Extents = ((Max - Min) * 0.5f) + BoundsPadding;
-	FVector BoxOffset = (Extents + Min);
-	BoundingBox->SetBoxExtent(Extents);
-	BoundingBox->SetRelativeLocation(BoxOffset);
+	UpdateBounds();
 	
 	Tags.AddUnique(FName("Pipe"));
 	if (IsBatched)
@@ -40,3 +34,13 @@ void AProceduralPipeActor::ComputeBoundingBox_Implementation(FVector& BoundsMin,
 	}
 }
 
+void AProceduralPipeActor::UpdateBounds()
+{
+	FVector Min;
+	FVector Max;
+	ComputeBoundingBox(Min, Max);
+	FVector Extents = ((Max - Min) * 0.5f) + BoundsPadding;
+	FVector BoxOffset = (Extents + Min);
+	BoundingBox->SetBoxExtent(Extents);
+	BoundingBox->SetRelativeLocation(BoxOffset);
+}

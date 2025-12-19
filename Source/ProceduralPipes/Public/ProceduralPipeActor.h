@@ -119,14 +119,14 @@ public:
 
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", AdvancedDisplay)
-	TSoftObjectPtr<UStaticMesh> StraightMesh;
-
-	
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", AdvancedDisplay)
-	TSoftObjectPtr<UStaticMesh> CornerMesh;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", AdvancedDisplay)
+	//TSoftObjectPtr<UStaticMesh> StraightMesh;
+	//
+	//
+	//
+	//
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", AdvancedDisplay)
+	//TSoftObjectPtr<UStaticMesh> CornerMesh;
 
 	
 
@@ -157,16 +157,16 @@ public:
 
 
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", AdvancedDisplay, meta = (EditCondition = "SpawnJoints"))
-	TSoftObjectPtr<UStaticMesh> JointPipeCorner;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", AdvancedDisplay, meta = (EditCondition = "SpawnJoints"))
+	//TSoftObjectPtr<UStaticMesh> JointPipeCorner;
 
 
 	
 
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", AdvancedDisplay, meta = (EditCondition = "SpawnJoints"))
-	TSoftObjectPtr<UMaterialInterface> JointOverrideMaterial;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", AdvancedDisplay, meta = (EditCondition = "SpawnJoints"))
+	//TSoftObjectPtr<UMaterialInterface> JointOverrideMaterial;
 
 
 
@@ -197,7 +197,7 @@ public:
 	bool bEnableSpawnOverride;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|OverrideGraphs", meta = (EditCondition = "bEnableSpawnOverride", 
-		Tooltip = "Final stage of processing which spawns Static Meshes. Override this to customize mesh spawning."))
+		Tooltip = "Final stage of processing which spawns Static Meshes. Override this to customize mesh spawning. This may be overriden if individual parts provide their own OverrideSpawnGraph"))
 	TScriptInterface<UPCGGraphInterface> SpawnOverride;
 
 
@@ -243,6 +243,10 @@ public:
 		
 		UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Core")
 		void ComputeBoundingBox(FVector& BoundsMin, FVector& BoundsMax);
+
+
+		UFUNCTION(BlueprintCallable, Category = "Core")
+		void UpdateBounds();
 		
 	//OVERRIDE_PCG_GRAPH_PROPERTY(
 	//	SpawnOverride,
