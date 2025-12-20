@@ -19,16 +19,16 @@
 
 
 
-UENUM(BlueprintType)
-enum class EPipePart : uint8
-{
-	PipeStraight = 1 UMETA(DisplayName = "Straight Pipe"	, Tooltip = ""),
-	PipeCorner = 2 UMETA(DisplayName = "Corner Pipe"		, Tooltip = ""),
-
-	JointMiddle = 4 UMETA(DisplayName = "Straight Joint"	, Tooltip = ""),
-	JointCorner = 5 UMETA(DisplayName = "Corner Joint"		, Tooltip = "")
-	//Unkown = 3 UMETA(DisplayName = "Custom PCG Graph", Tooltip = "Supply a custom PCG Graph to spawn the clutter for each shelf.")
-};
+//UENUM(BlueprintType)
+//enum class EPipePart : uint8
+//{
+//	PipeStraight = 1 UMETA(DisplayName = "Straight Pipe"	, Tooltip = ""),
+//	PipeCorner = 2 UMETA(DisplayName = "Corner Pipe"		, Tooltip = ""),
+//
+//	JointMiddle = 4 UMETA(DisplayName = "Straight Joint"	, Tooltip = ""),
+//	JointCorner = 5 UMETA(DisplayName = "Corner Joint"		, Tooltip = "")
+//	//Unkown = 3 UMETA(DisplayName = "Custom PCG Graph", Tooltip = "Supply a custom PCG Graph to spawn the clutter for each shelf.")
+//};
 
 
 USTRUCT(BlueprintType)
@@ -59,7 +59,7 @@ struct PROCEDURALPIPES_API FPipePartConfig
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart|OverrideGraphs", meta = (InlineEditConditionToggle,
 		Tooltip = "Final stage of processing which spawns Static Meshes. Override this to customize mesh spawning."))
-	bool bEnableSpawnOverride;
+	bool bEnableSpawnOverride = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PipePart|OverrideGraphs", meta = (EditCondition = "bEnableSpawnOverride",
 		Tooltip = "Final stage of processing which spawns Static Meshes. Override this to customize mesh spawning."))
