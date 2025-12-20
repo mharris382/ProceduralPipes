@@ -6,10 +6,10 @@
 	"Description": "PCG Pipe Spline Tool",
 	"Category": "PCG",
 	"CreatedBy": "Max Harris",
-	"CreatedByURL": "",
-	"DocsURL": "https://docs.google.com/document/d/1G2CPxulTsxWDFIMRHI0IuspqTQ1BRHoiUMN6pOmnjjc/edit?usp=sharing",
+	"CreatedByURL": "https://github.com/mharris382",
+	"DocsURL": "https://better-faster-tech.gitbook.io/procedural-architect/",
 	"MarketplaceURL": "",
-	"SupportURL": "",
+	"SupportURL": "https://better-faster-tech.gitbook.io/procedural-architect/procedural-architect/support",
 	"CanContainContent": true,
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
@@ -24,6 +24,10 @@
 	"Plugins": [
 		{
 			"Name": "PCG",
+			"Enabled": true
+		},
+		{
+			"Name": "PCGGeometryScriptInterop",
 			"Enabled": true
 		}
 	]

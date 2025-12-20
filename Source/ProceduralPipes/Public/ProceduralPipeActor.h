@@ -123,8 +123,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes")
 	FPipePartConfig StraightPipe;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes")
-	FPipePartConfig CornerStraightPipe;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (DisplayName="CornerPipe", FormerlySerializedAs = "CornerStraightPipe"))
+	FPipePartConfig CornerPipe;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (Tooltip = "Default Override Material, applied to all parts which do not assign an override material"))
