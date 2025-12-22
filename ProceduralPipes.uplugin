@@ -8,9 +8,10 @@
 	"CreatedBy": "Max Harris",
 	"CreatedByURL": "https://github.com/mharris382",
 	"DocsURL": "https://better-faster-tech.gitbook.io/procedural-architect/",
-	"MarketplaceURL": "",
+	"MarketplaceURL": "com.epicgames.launcher://ue/Fab/product/0f1ffea9-6df5-41bf-a2a9-d6f60c5a0cc2",
 	"SupportURL": "https://better-faster-tech.gitbook.io/procedural-architect/procedural-architect/support",
 	"CanContainContent": true,
+	"EngineVersion": "5.7.1",
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
 	"Installed": false,
@@ -18,7 +19,15 @@
 		{
 			"Name": "ProceduralPipes",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64",
+				"Mac",
+				"IOS",
+				"Android",
+				"Linux",
+				"LinuxArm64"
+			]
 		}
 	],
 	"Plugins": [
