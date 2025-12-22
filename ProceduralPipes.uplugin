@@ -11,7 +11,7 @@
 	"MarketplaceURL": "com.epicgames.launcher://ue/Fab/product/0f1ffea9-6df5-41bf-a2a9-d6f60c5a0cc2",
 	"SupportURL": "https://better-faster-tech.gitbook.io/procedural-architect/procedural-architect/support",
 	"CanContainContent": true,
-	"EngineVersion": "5.7.1",
+	"EngineVersion": "5.7.0",
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
 	"Installed": false,
