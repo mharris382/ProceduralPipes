@@ -87,21 +87,6 @@ struct PROCEDURALPIPES_API FPipePartConfig
 
 
 
-//USTRUCT(BlueprintType)
-//struct PROCEDURALPIPES_API FOverrideablePCGGraph
-//{
-//	GENERATED_BODY();
-//
-//	FOverrideablePCGGraph() = default;
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Overrides")
-//	bool EnableOverrideGraph;
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Overrides", meta = (EditCondition = "EnableOverrideGraph"))
-//	TScriptInterface<UPCGGraphInterface> OverrideGraph;
-//};
-
-
 UCLASS(Abstract, BlueprintType)
 class PROCEDURALPIPES_API AProceduralPipeActor : public AActor
 {
@@ -114,23 +99,52 @@ public:
 	
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (ClampMin = "0.01"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes",meta = (ClampMin = "0.01",Tooltip = "Uniform scale applied to all spawned pipe parts. Affects mesh size, joint spacing, and corner dimensions."))
 	float PipeScale = 1.0;
 
 
 	
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (Tooltip = "Material override applied to all pipe parts that do not explicitly assign their own override material."))
+	TSoftObjectPtr<UMaterialInterface> DefaultOverrideMaterial;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes",meta = (DisplayName = "Pipe-Straight",Tooltip ="Default straight pipe mesh. Mesh should face the +X axis. Mesh length and RelativeScale.X determine how many middle joints are spawned (if enabled). Can be overridden in the Pre-Spawn Override Graph. "))
 	FPipePartConfig StraightPipe;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (DisplayName="CornerPipe", FormerlySerializedAs = "CornerStraightPipe"))
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (DisplayName="Pipe-Corner-90", FormerlySerializedAs = "CornerStraightPipe", Tooltip = "90-degree corner pipe mesh. Used for sharp bends when 45-degree corner pipes are disabled or when the bend angle exceeds the 45-degree cutoff."))
 	FPipePartConfig CornerPipe;
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (Tooltip = "Default Override Material, applied to all parts which do not assign an override material"))
-	TSoftObjectPtr<UMaterialInterface> DefaultOverrideMaterial;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (InlineEditConditionToggle))
+	bool Spawn45DegreeCornerPipes = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (DisplayName = "Pipe-Corner-45", EditCondition = "Spawn45DegreeCornerPipes", Tooltip="Optional 45-degree corner pipe mesh. Angles closer to 45° will use this mesh; sharper bends will fall back to the 90-degree corner."))
+	FPipePartConfig CornerPipe45Degree;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (InlineEditConditionToggle))
+	bool SpawnCornerJoints = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (DisplayName = "Joint-Corner", EditCondition = "SpawnCornerJoints", Tooltip="Joint mesh spawned at corner attachment points. Attachment points must be defined as sockets on the corner pipe mesh."))
+	FPipePartConfig PipeJointCorner;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (InlineEditConditionToggle))
+	bool SpawnMiddleJoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (DisplayName = "Joint-Middle", EditCondition = "SpawnMiddleJoints", Tooltip="Joint mesh spawned between straight pipe segments. Spacing is determined by the straight pipe mesh length and x scale"))
+	FPipePartConfig PipeJointMiddle;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (InlineEditConditionToggle))
+	bool SpawnEndJoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (DisplayName = "Joint-End", EditCondition = "SpawnEndJoints", Tooltip="Joint mesh spawned at the start and end of the spline. Only used for open splines; ignored for closed loops."))
+	FPipePartConfig PipeJointEnd;
+
+
+
+	
 
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", AdvancedDisplay)
@@ -146,29 +160,8 @@ public:
 
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints")
-	bool SpawnJoints = true;
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", meta = (EditCondition = "SpawnJoints", InlineEditConditionToggle, EditConditionHides))
-	bool SpawnCornerJoints = true;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", meta = (EditCondition = "SpawnCornerJoints"))
-	FPipePartConfig PipeJointCorner;
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", meta = (EditCondition = "SpawnJoints", InlineEditConditionToggle, EditConditionHides))
-	bool SpawnMiddleJoints;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", meta = (EditCondition = "SpawnMiddleJoints"))
-	FPipePartConfig PipeJointMiddle;
-
-
-
-
-
-
-
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints")
+	//bool SpawnJoints = true;
 
 	
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", AdvancedDisplay, meta = (EditCondition = "SpawnJoints"))
@@ -176,9 +169,6 @@ public:
 
 
 	
-
-
-
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|Joints", AdvancedDisplay, meta = (EditCondition = "SpawnJoints"))
 	//TSoftObjectPtr<UMaterialInterface> JointOverrideMaterial;
 
