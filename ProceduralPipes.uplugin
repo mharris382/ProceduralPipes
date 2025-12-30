@@ -36,5 +36,6 @@
 			"Name": "PCGGeometryScriptInterop",
 			"Enabled": true
 		}
-	]
+	],
+	"EditorCustomVirtualPath": "ProceduralArchitect"
 }
