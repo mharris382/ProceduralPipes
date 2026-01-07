@@ -116,7 +116,7 @@ public:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (InlineEditConditionToggle))
-	bool Spawn45DegreeCornerPipes = false;
+	bool Spawn45DegreeCornerPipes = true;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", meta = (DisplayName = "Pipe-Corner-45", EditCondition = "Spawn45DegreeCornerPipes", Tooltip="Optional 45-degree corner pipe mesh. Angles closer to 45° will use this mesh; sharper bends will fall back to the 90-degree corner."))
 	FPipePartConfig CornerPipe45Degree;
