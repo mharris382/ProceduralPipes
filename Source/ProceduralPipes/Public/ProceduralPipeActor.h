@@ -190,9 +190,10 @@ public:
 
 
 
+#pragma region OverrideGraphs
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|OverrideGraphs", meta = (
-		Tooltip="Use this to disable all override graphs for this asset.  Useful for debugging."))
+		Tooltip = "Use this to disable all override graphs for this asset.  Useful for debugging."))
 	bool DisableAllOverrideGraphs;
 
 
@@ -200,17 +201,17 @@ public:
 		Tooltip = "Final stage of processing which spawns Static Meshes. Override this to customize mesh spawning."))
 	bool bEnableSpawnOverride;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|OverrideGraphs", meta = (EditCondition = "bEnableSpawnOverride", 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|OverrideGraphs", meta = (EditCondition = "bEnableSpawnOverride",
 		Tooltip = "Final stage of processing which spawns Static Meshes. Override this to customize mesh spawning. This may be overriden if individual parts provide their own OverrideSpawnGraph"))
 	TScriptInterface<UPCGGraphInterface> SpawnOverride;
 
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Pipes|OverrideGraphs",meta = (InlineEditConditionToggle, EditCondition = "!DisableAllOverrideGraphs",
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|OverrideGraphs", meta = (InlineEditConditionToggle, EditCondition = "!DisableAllOverrideGraphs",
 		Tooltip = "Enables a Pre-Spawn Override Graph that processes ALL points before any meshes are spawned. This graph has global authority and can filter, merge, or modify points prior to the normal spawn behavior."))
 	bool bEnablePreSpawnOverride;
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|OverrideGraphs", meta = (EditCondition = "bEnablePreSpawnOverride", 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|OverrideGraphs", meta = (EditCondition = "bEnablePreSpawnOverride",
 		Tooltip = "Graph executed before spawning begins. Receives the complete point set and must output the final points used for spawning. Use this to globally filter, merge, or preprocess points before any Spawn Override Graphs are evaluated."))
 	TScriptInterface<UPCGGraphInterface> PreSpawnOverride;
 
@@ -224,6 +225,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes|OverrideGraphs", meta = (EditCondition = "bEnablePostSpawnOverride",
 		Tooltip = "Graph executed after all spawning is complete. Receives spawned meshes as input and may spawn additional effects, decorations, or data. This graph cannot alter the original spawn results."))
 	TScriptInterface<UPCGGraphInterface> PostSpawnOverride;
+
+#pragma endregion
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", AdvancedDisplay, meta = (Tooltip = "If enabled, pipe spline will not spawn it's own points.   Instead the points will be output with the assumption that another pcg world actor will spawn them instead using SpawnPipes.  NOTE: if no actor exists, the pipe won't be spawned"))
@@ -246,16 +249,19 @@ public:
 	UBoxComponent* BoundingBox;
 
 	protected:
-		virtual void ComputeBoundingBox_Implementation(FVector& BoundsMin, FVector& BoundsMax);
+	virtual void ComputeBoundingBox_Implementation(FVector& BoundsMin, FVector& BoundsMax);
 
 	public:
 		
-		UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Core")
-		void ComputeBoundingBox(FVector& BoundsMin, FVector& BoundsMax);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Core")
+	void ComputeBoundingBox(FVector& BoundsMin, FVector& BoundsMax);
 
 
-		UFUNCTION(BlueprintCallable, Category = "Core")
-		void UpdateBounds();
+	UFUNCTION(BlueprintCallable, Category = "Core")
+	void UpdateBounds();
+
+	virtual void OnConstruction(const FTransform& Transform) override;
+	virtual void PostLoad() override;
 		
 	//OVERRIDE_PCG_GRAPH_PROPERTY(
 	//	SpawnOverride,
