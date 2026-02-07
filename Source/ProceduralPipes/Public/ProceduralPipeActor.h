@@ -227,16 +227,22 @@ public:
 	TScriptInterface<UPCGGraphInterface> PostSpawnOverride;
 
 #pragma endregion
-
+	
+	///--------------------------------------------------------------------------------------
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", AdvancedDisplay, meta = (Tooltip = "If enabled, pipe spline will not spawn it's own points.   Instead the points will be output with the assumption that another pcg world actor will spawn them instead using SpawnPipes.  NOTE: if no actor exists, the pipe won't be spawned"))
 	bool IsBatched;
+
+	///--------------------------------------------------------------------------------------
+	//PCG Grammar
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", AdvancedDisplay, meta = (Tooltip = "Grammar used to subdivide straight segments.  Default StraightPipe has the symbol \"P\".  Additional pipe meshes can be added below and use symbol by index \"P0\",\"P1\",...\"Pn\" "))
 	FString StraightSegmentGrammar = TEXT("[P]*");
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pipes", AdvancedDisplay, meta = (Tooltip = "Can be referenced in the grammar string using symbols based on index (i.e. \"P0\",\"P1\",...\"Pn\")"))
 	TArray<FPipePartConfig> AdditionalStraightPipes;
+
+	///--------------------------------------------------------------------------------------
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Core", meta = (Tooltip = "Shared Actor Seed for convienence to be used in PCG Graphs with randomness.  This is only applicable with override graphs, the default behavior is not random", EditCondition = "!DisableAllOverrideGraphs"))
 	int Seed = 0;
@@ -244,6 +250,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Core", meta = (Tooltip = "Padding to be added to the computed bounding box of the pipe actor"))
 	FVector BoundsPadding = FVector(0.0f, 0.0f, 0.0f);
 
+
+	///--------------------------------------------------------------------------------------
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* BoundingBox;
